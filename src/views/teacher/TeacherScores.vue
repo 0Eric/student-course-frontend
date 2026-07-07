@@ -31,7 +31,7 @@
         <el-table :data="studentList" stripe style="width: 100%">
           <el-table-column type="index" label="序号" width="60" align="center" />
           <el-table-column prop="studentNo" label="学号" width="140" />
-          <el-table-column prop="realName" label="学生姓名" min-width="120" />
+          <el-table-column prop="studentName" label="学生姓名" min-width="120" />
           <el-table-column prop="score" label="成绩" width="100" align="center">
             <template #default="{ row }">
               <el-tag
@@ -108,8 +108,11 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import { useUserStore } from '@/store/user'
 import { getCoursePage } from '@/api/course'
 import { getCourseScores, saveScore, updateScore } from '@/api/score'
+
+const userStore = useUserStore()
 
 const loading = ref(false)
 const selectedCourseId = ref(null)
@@ -140,8 +143,17 @@ const scoreRules = {
 
 const loadCourseOptions = async () => {
   try {
-    const res = await getCoursePage({ pageNum: 1, pageSize: 999 })
+    const res = await getCoursePage({
+      pageNum: 1,
+      pageSize: 999,
+      teacherId: userStore.userInfo?.userId
+    })
     courseOptions.value = res.data?.records || res.data || []
+    // 默认选中第一个课程并加载学生
+    if (courseOptions.value.length > 0 && !selectedCourseId.value) {
+      selectedCourseId.value = courseOptions.value[0].id
+      await loadStudents()
+    }
   } catch {
     // silently fail
   }
@@ -167,9 +179,9 @@ const handleCourseChange = () => {
 }
 
 const openScoreDialog = (row) => {
-  scoreStudentId.value = row.id || row.studentId || row.userId
-  scoreStudentName.value = row.realName || row.username
-  scoreEditId.value = row.scoreId || null
+  scoreStudentId.value = row.studentId
+  scoreStudentName.value = row.studentName || row.username || '未知'
+  scoreEditId.value = row.id || null
   scoreForm.score = row.score !== null && row.score !== undefined ? row.score : 0
   scoreDialogVisible.value = true
 }
