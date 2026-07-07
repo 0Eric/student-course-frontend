@@ -6,7 +6,7 @@
         <el-table :data="courseList" stripe style="width: 100%">
           <el-table-column prop="courseName" label="课程名称" min-width="160" />
           <el-table-column prop="teacherName" label="教师" min-width="120" />
-          <el-table-column prop="credits" label="学分" width="80" align="center" />
+          <el-table-column prop="credit" label="学分" width="80" align="center" />
           <el-table-column prop="schedule" label="上课时间" min-width="160" />
           <el-table-column label="成绩" width="100" align="center">
             <template #default="{ row }">

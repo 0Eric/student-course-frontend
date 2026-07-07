@@ -4,6 +4,10 @@ export function createClass(data) {
   return request({ url: '/classes', method: 'post', data })
 }
 
+export function getClassList() {
+  return request({ url: '/classes/list-all', method: 'get' })
+}
+
 export function getClassPage(params) {
   return request({ url: '/classes/page', method: 'get', params })
 }

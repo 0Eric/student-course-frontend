@@ -30,3 +30,11 @@ export function updatePassword(data) {
     data
   })
 }
+
+export function updateProfile(data) {
+  return request({
+    url: '/auth/profile',
+    method: 'put',
+    data
+  })
+}

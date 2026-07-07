@@ -11,3 +11,7 @@ export function getSchoolScores(params) {
 export function getClassScoreReport(classId, params) {
   return request({ url: `/scores/class-stats/${classId}`, method: 'get', params })
 }
+
+export function getDashboardStats() {
+  return request({ url: '/statistics/dashboard', method: 'get' })
+}

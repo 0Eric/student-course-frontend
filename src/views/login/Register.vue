@@ -39,6 +39,12 @@
         <el-form-item label="学号" prop="studentNo">
           <el-input v-model="registerForm.studentNo" placeholder="请输入学号" />
         </el-form-item>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="registerForm.phone" placeholder="请输入手机号（选填）" />
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="registerForm.email" placeholder="请输入邮箱（选填）" />
+        </el-form-item>
         <el-form-item label="所属班级" prop="classId">
           <el-select
             v-model="registerForm.classId"
@@ -91,7 +97,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/store/user'
-import { getClassPage } from '@/api/classes'
+import { getClassList } from '@/api/classes'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -107,6 +113,8 @@ const registerForm = reactive({
   confirmPassword: '',
   realName: '',
   studentNo: '',
+  phone: '',
+  email: '',
   classId: '',
   roleCode: 'STUDENT'
 })
@@ -138,6 +146,12 @@ const registerRules = {
   studentNo: [
     { required: true, message: '请输入学号', trigger: 'blur' }
   ],
+  phone: [
+    { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号', trigger: 'blur' }
+  ],
+  email: [
+    { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+  ],
   classId: [
     { required: true, message: '请选择所属班级', trigger: 'change' }
   ],
@@ -149,7 +163,7 @@ const registerRules = {
 const loadClasses = async () => {
   classLoading.value = true
   try {
-    const res = await getClassPage({ page: 1, pageSize: 100 })
+    const res = await getClassList()
     classList.value = res.data?.records || res.data || []
   } catch (e) {
     ElMessage.error('获取班级列表失败')
@@ -178,7 +192,9 @@ const handleRegister = async () => {
       realName: registerForm.realName,
       studentNo: registerForm.studentNo,
       classId: registerForm.classId,
-      roleCode: registerForm.roleCode
+      roleCode: registerForm.roleCode,
+      phone: registerForm.phone || undefined,
+      email: registerForm.email || undefined
     })
     ElMessage.success('注册成功，请登录')
     router.push('/login')

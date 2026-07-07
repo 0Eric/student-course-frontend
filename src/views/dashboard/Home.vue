@@ -62,10 +62,12 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import dayjs from 'dayjs'
+import { getDashboardStats } from '@/api/statistics'
 
 const router = useRouter()
 const userStore = useUserStore()
 const loading = ref(false)
+const stats = ref(null)
 
 const hasRole = (code) => userStore.roleCodes.includes(code)
 
@@ -91,7 +93,17 @@ const updateTime = () => {
 onMounted(() => {
   updateTime()
   timer = setInterval(updateTime, 1000)
+  fetchDashboardStats()
 })
+
+const fetchDashboardStats = async () => {
+  try {
+    const res = await getDashboardStats()
+    stats.value = res.data
+  } catch (e) {
+    console.error('获取仪表盘统计失败', e)
+  }
+}
 
 onUnmounted(() => {
   if (timer) clearInterval(timer)
@@ -101,34 +113,34 @@ onUnmounted(() => {
 const statsCards = computed(() => {
   if (hasRole('PRINCIPAL')) {
     return [
-      { label: '总用户数', value: '--', icon: 'User', color: '#409eff' },
-      { label: '课程总数', value: '--', icon: 'Reading', color: '#67c23a' },
-      { label: '班级总数', value: '--', icon: 'School', color: '#e6a23c' },
-      { label: '总选课数', value: '--', icon: 'List', color: '#f56c6c' }
+      { label: '总用户数', value: stats.value?.totalUsers ?? '--', icon: 'User', color: '#409eff' },
+      { label: '课程总数', value: stats.value?.totalCourses ?? '--', icon: 'Reading', color: '#67c23a' },
+      { label: '班级总数', value: stats.value?.totalClasses ?? '--', icon: 'School', color: '#e6a23c' },
+      { label: '总选课数', value: stats.value?.totalEnrollments ?? '--', icon: 'List', color: '#f56c6c' }
     ]
   }
   if (hasRole('TEACHER')) {
     return [
-      { label: '我的课程', value: '--', icon: 'Reading', color: '#409eff' },
-      { label: '学生总数', value: '--', icon: 'UserFilled', color: '#67c23a' },
-      { label: '授课班级', value: '--', icon: 'School', color: '#e6a23c' },
-      { label: '待录入成绩', value: '--', icon: 'Edit', color: '#f56c6c' }
+      { label: '我的课程', value: stats.value?.myCourseCount ?? '--', icon: 'Reading', color: '#409eff' },
+      { label: '学生总数', value: stats.value?.studentCount ?? '--', icon: 'UserFilled', color: '#67c23a' },
+      { label: '授课班级', value: stats.value?.classCount ?? '--', icon: 'School', color: '#e6a23c' },
+      { label: '待录入成绩', value: stats.value?.pendingScoreCount ?? '--', icon: 'Edit', color: '#f56c6c' }
     ]
   }
   if (hasRole('MONITOR')) {
     return [
-      { label: '班级人数', value: '--', icon: 'UserFilled', color: '#409eff' },
-      { label: '已选课程', value: '--', icon: 'Notebook', color: '#67c23a' },
-      { label: '可选课程', value: '--', icon: 'Reading', color: '#e6a23c' },
-      { label: '班级成绩', value: '--', icon: 'TrendCharts', color: '#f56c6c' }
+      { label: '班级人数', value: stats.value?.classSize ?? '--', icon: 'UserFilled', color: '#409eff' },
+      { label: '已选课程', value: stats.value?.enrolledCount ?? '--', icon: 'Notebook', color: '#67c23a' },
+      { label: '可选课程', value: stats.value?.availableCount ?? '--', icon: 'Reading', color: '#e6a23c' },
+      { label: '班级成绩', value: stats.value?.scoreCount ?? '--', icon: 'TrendCharts', color: '#f56c6c' }
     ]
   }
   // 学生默认
   return [
-    { label: '已选课程', value: '--', icon: 'Notebook', color: '#409eff' },
-    { label: '可选课程', value: '--', icon: 'Reading', color: '#67c23a' },
-    { label: '我的成绩', value: '--', icon: 'DataAnalysis', color: '#e6a23c' },
-    { label: '课程数', value: '--', icon: 'List', color: '#f56c6c' }
+    { label: '已选课程', value: stats.value?.enrolledCount ?? '--', icon: 'Notebook', color: '#409eff' },
+    { label: '可选课程', value: stats.value?.availableCount ?? '--', icon: 'Reading', color: '#67c23a' },
+    { label: '我的成绩', value: stats.value?.scoreCount ?? '--', icon: 'DataAnalysis', color: '#e6a23c' },
+    { label: '课程数', value: stats.value?.totalCourseCount ?? '--', icon: 'List', color: '#f56c6c' }
   ]
 })
 

@@ -31,7 +31,7 @@
                 </div>
                 <div class="info-row">
                   <span class="info-label">学分：</span>
-                  <span>{{ course.credits }}</span>
+                  <span>{{ course.credit }}</span>
                 </div>
                 <div class="info-row">
                   <span class="info-label">容量：</span>
