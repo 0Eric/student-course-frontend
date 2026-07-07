@@ -1,1 +1,0 @@
-import{r as t}from"./request-B1bKDCpG.js";function n(e){return t({url:"/enrollments",method:"post",data:e})}function l(e){return t({url:`/enrollments/${e}`,method:"delete"})}function o(e){return t({url:"/enrollments/my",method:"get",params:e})}function s(e){return t({url:"/enrollments/class-stats",method:"get",params:e})}export{s as a,l as d,n as e,o as g};

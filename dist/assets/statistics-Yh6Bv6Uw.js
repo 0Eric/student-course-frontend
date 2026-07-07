@@ -1,1 +1,0 @@
-import{r as s}from"./request-B1bKDCpG.js";function o(){return s({url:"/statistics/enrollment-stats",method:"get"})}function c(t){return s({url:"/statistics/school-scores",method:"get",params:t})}function n(t,e){return s({url:`/statistics/class-scores/${t}`,method:"get",params:e})}export{n as a,o as b,c as g};

@@ -1,0 +1,1 @@
+import{G as s}from"./index-Cnd0vKNf.js";function r(){return s({url:"/statistics/enrollment-stats",method:"get"})}function n(t){return s({url:"/statistics/school-scores",method:"get",params:t})}function a(t,e){return s({url:`/scores/class-stats/${t}`,method:"get",params:e})}export{a,r as b,n as g};
