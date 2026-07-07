@@ -1,0 +1,1 @@
+import{r as s}from"./request-B1bKDCpG.js";function a(e){return s({url:"/classes/page",method:"get",params:e})}function u(e,t){return s({url:`/classes/${e}/students`,method:"get",params:t})}export{u as a,a as g};

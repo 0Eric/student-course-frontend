@@ -1,0 +1,1 @@
+import{r}from"./request-B1bKDCpG.js";function u(t){return r({url:"/auth/login",method:"post",data:t})}function o(t){return r({url:"/auth/register",method:"post",data:t})}function n(){return r({url:"/auth/me",method:"get"})}function s(t){return r({url:"/auth/password",method:"put",data:t})}export{n as g,u as l,o as r,s as u};
