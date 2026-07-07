@@ -1,1 +1,0 @@
-import{G as s}from"./index-Cnd0vKNf.js";function r(e){return s({url:"/classes/page",method:"get",params:e})}function u(e,t){return s({url:`/classes/${e}/students`,method:"get",params:t})}export{u as a,r as g};
